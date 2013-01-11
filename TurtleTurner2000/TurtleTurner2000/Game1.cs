@@ -25,7 +25,7 @@ namespace TurtleTurner2000
         Texture2D charmanderTexture;
         List<Charmander> charmanders;
 
-        String octopeusjeToBe = "er kotm een ocotpeus";
+        String octopeusjeToBe = "octopeut is de kneuterdepineut";
 
         Rectangle totSize;
         Rectangle curSize;
