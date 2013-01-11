@@ -25,7 +25,7 @@ namespace TurtleTurner2000
         Texture2D charmanderTexture;
         List<Charmander> charmanders;
 
-        String octopeusjeToBe = "er kotm een ocotpeus";
+        String octopeusjeToBe = "De octovroiten zijn vroetvrouwen van octobenen";
 
         Rectangle totSize;
         Rectangle curSize;
@@ -137,7 +137,7 @@ namespace TurtleTurner2000
                             int xDir = inc.ReadInt32();
                             int yDir = inc.ReadInt32();
                             squirtles.Add(new Squirtle(new Vector2((float)xDir / 1000.0f, (float)yDir / 1000.0f), new Vector2(xPos, yPos)));
-                            charmanders.Add(new Charmander(new Vector2((float)xDir*2 /1000.0f, (float) yDir *2 /1000.0f), new Vector2(xPos + 50, yPos + 50)));
+                            charmanders.Add(new Charmander(new Vector2((float)xDir * 2 / 1000.0f, (float)yDir * 2 / 1000.0f), new Vector2(xPos + 50, yPos + 50)));
                         }
                         else if (messageDinges == 2)
                         {
