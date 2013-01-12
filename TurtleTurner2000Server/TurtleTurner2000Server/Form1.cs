@@ -9,12 +9,16 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using TutleTurner200.Server;
 
 namespace TurtleTurner2000Server
 {
     public partial class Form1 : Form
     {
         private DeveServer deveServer;
+        private StoreAppListenerRouter salc;
+
+
         private Random r = new Random();
 
         private Dictionary<DeveConnection, Clientje> allClientjes = new Dictionary<DeveConnection, Clientje>();
@@ -30,8 +34,12 @@ namespace TurtleTurner2000Server
             deveServer = new DeveServer(1337);
             deveServer.Start();
 
+            salc = new StoreAppListenerRouter(this);
+
+
             Task.Run(() => Runner());
         }
+
 
         public void Runner()
         {
@@ -120,6 +128,7 @@ namespace TurtleTurner2000Server
                             switch (ns)
                             {
                                 case NetworkStatus.Connected:
+
                                     DebugMSG("Er connect iets :O");
                                     break;
                                 case NetworkStatus.Disconnected:
@@ -295,7 +304,10 @@ namespace TurtleTurner2000Server
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            //SendRandomSquirtle();
+            label2.Text = screenClientjes.Count.ToString();
+            label4.Text = controlClientjes.Count.ToString();
+            label6.Text = salc.clients.Count.ToString();
+            label8.Text = allClientjes.Count.ToString();
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
