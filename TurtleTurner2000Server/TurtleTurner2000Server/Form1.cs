@@ -52,6 +52,8 @@ namespace TurtleTurner2000Server
                                 int hetTypeDevice = inc.ReadInt32();
                                 if (hetTypeDevice == 0) //Een screen client
                                 {
+                                    DebugMSG("Het is een screen client :D:D:D");
+
                                     ScreenClientje screenClientje = new ScreenClientje(inc.Sender, curNumberOfScreen);
                                     screenClientjes.Add(inc.Sender, screenClientje);
                                     allClientjes.Add(inc.Sender, screenClientje);
@@ -61,9 +63,17 @@ namespace TurtleTurner2000Server
                                 }
                                 else if (hetTypeDevice == 1) //Android
                                 {
+                                    DebugMSG("Het is een Android :)");
+
                                     ControlClientje controlClientje = new ControlClientje(inc.Sender);
                                     controlClientjes.Add(inc.Sender, controlClientje);
                                     allClientjes.Add(inc.Sender, controlClientje);
+
+                                    DeveOutgoingMessage outje = new DeveOutgoingMessage();
+                                    outje.WriteInt32(1); //Add beestje bij alle screens
+                                    outje.WriteString(controlClientje.guid);
+
+                                    SendToScreens(outje);
                                 }
                             }
                             else if (hetTypeMessage == 1) //Een message met button klik stuff
@@ -97,11 +107,10 @@ namespace TurtleTurner2000Server
                                 DeveOutgoingMessage outje = new DeveOutgoingMessage();
                                 outje.WriteInt32(3);
                                 outje.WriteString(curControlClient.guid);
+                                outje.WriteInt32(curControlClient.posx);
+                                outje.WriteInt32(curControlClient.posy);
 
-                                foreach (var screenClientje in screenClientjes.Values)
-                                {
-                                    screenClientje.deveConnection.Send(outje);
-                                }
+                                SendToScreens(outje);
                             }
 
                             break;
@@ -111,9 +120,19 @@ namespace TurtleTurner2000Server
                             switch (ns)
                             {
                                 case NetworkStatus.Connected:
-                                    //Doe niets
+                                    DebugMSG("Er connect iets :O");
                                     break;
                                 case NetworkStatus.Disconnected:
+
+                                    if (controlClientjes.ContainsKey(inc.Sender))
+                                    {
+                                        ControlClientje controlClientje = controlClientjes[inc.Sender];
+                                        DeveOutgoingMessage outje = new DeveOutgoingMessage();
+                                        outje.WriteInt32(2);
+                                        outje.WriteString(controlClientje.guid);
+                                        SendToScreens(outje);
+
+                                    }
 
                                     RemoveFromAllClientLists(inc.Sender);
 
@@ -128,6 +147,14 @@ namespace TurtleTurner2000Server
                     }
                 }
                 Thread.Sleep(1);
+            }
+        }
+
+        public void SendToScreens(DeveOutgoingMessage outje)
+        {
+            foreach (var screenClientje in screenClientjes.Values)
+            {
+                screenClientje.deveConnection.Send(outje);
             }
         }
 
