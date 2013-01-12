@@ -9,6 +9,8 @@ using Microsoft.Xna.Framework.Storage;
 using Microsoft.Xna.Framework.GamerServices;
 using DeveConnecteuze.Network;
 using System.Threading;
+using System.Net;
+using System.IO;
 #endregion
 namespace TurtleTurner2000
 {
@@ -21,11 +23,17 @@ namespace TurtleTurner2000
         SpriteBatch spriteBatch;
 
         Texture2D squirtleTexture;
-        List<Squirtle> squirtles;
-        Texture2D charmanderTexture;
-        List<Charmander> charmanders;
 
-        String octopeusjeToBe = "er kotm een ocotpeus";
+        Texture2D charmanderTexture;
+
+        Texture2D bulbasaurTexture;
+        Texture2D venubronkiTexture;
+        Texture2D venubrateuzadroidTexture;
+
+        Texture2D myssignuvskitrabovTexture;
+
+        List<Brokemon> brokemons;
+
         Rectangle totSize;
         Rectangle curSize;
 
@@ -39,9 +47,27 @@ namespace TurtleTurner2000
             graphics.PreferredBackBufferWidth = 1920;
             graphics.IsFullScreen = true;
             Content.RootDirectory = "Content";
-            //deveClient = new DeveClient("192.168.2.11", 1337);
-            deveClient = new DeveClient("10.33.184.220", 1337);
+
+            String ip = "";
+            WebRequest req = WebRequest.Create("https://dl.dropbox.com/u/1814002/TurtleTurner2000/ip.txt");
+            WebResponse resp = req.GetResponse();
+            using (Stream streampje = resp.GetResponseStream())
+            {
+                using (TextReader reader = new StreamReader(streampje))
+                {
+                    ip = reader.ReadLine();
+                }
+            }
+            deveClient = new DeveClient("localhost", 1337);
+            //deveClient = new DeveClient(ip, 1337);
             deveClient.Start();
+
+            DeveOutgoingMessage outje = new DeveOutgoingMessage();
+            outje.WriteInt32(0);
+            outje.WriteInt32(0);
+            outje.WriteInt32(graphics.PreferredBackBufferWidth);
+            outje.WriteInt32(graphics.PreferredBackBufferHeight);
+            deveClient.Send(outje);
         }
 
         protected override void OnExiting(Object sender, EventArgs args)
@@ -59,8 +85,7 @@ namespace TurtleTurner2000
         /// </summary>
         protected override void Initialize()
         {
-            squirtles = new List<Squirtle>();
-            charmanders = new List<Charmander>();
+            brokemons = new List<Brokemon>();
             base.Initialize();
         }
 
@@ -72,8 +97,16 @@ namespace TurtleTurner2000
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+
             squirtleTexture = this.Content.Load<Texture2D>("skwirtle");
+
             charmanderTexture = this.Content.Load<Texture2D>("charmander2");
+
+            bulbasaurTexture = this.Content.Load<Texture2D>("brotasuar");
+            venubronkiTexture = this.Content.Load<Texture2D>("venubronki");
+            venubrateuzadroidTexture = this.Content.Load<Texture2D>("venubrateuzadroid");
+
+            myssignuvskitrabovTexture = this.Content.Load<Texture2D>("myssignuvskitrabov");
         }
 
         /// <summary>
@@ -113,7 +146,8 @@ namespace TurtleTurner2000
                     case DeveMessageType.KeepAlive:
                         break;
                     case DeveMessageType.Data:
-                        int messageDinges = inc.ReadInt32();
+                        int messageDinges = inc.ReadInt32(); //Type van de Data message. 0 = your screen position, 1 = monsterspawn, 2 = monster direction gieben
+                        //string IDString = inc.ReadString(); //ID van het brokemonnetje
                         if (messageDinges == 0)
                         {
                             totSize = new Rectangle();
@@ -135,20 +169,50 @@ namespace TurtleTurner2000
                             int yPos = inc.ReadInt32();
                             int xDir = inc.ReadInt32();
                             int yDir = inc.ReadInt32();
-                            squirtles.Add(new Squirtle(new Vector2((float)xDir / 1000.0f, (float)yDir / 1000.0f), new Vector2(xPos, yPos)));
-                            charmanders.Add(new Charmander(new Vector2((float)xDir * 2 / 1000.0f, (float)yDir * 2 / 1000.0f), new Vector2(xPos + 50, yPos + 50)));
+
+                            Texture2D[] brokemonTexture = new Texture2D[3];
+                            int rInt = 0;
+                            Random r = new Random();
+                            rInt = r.Next(3);
+                            
+                            switch (rInt)
+                            {
+                                case 0:
+                                    brokemonTexture[0] = squirtleTexture;
+                                    brokemonTexture[1] = squirtleTexture;
+                                    brokemonTexture[2] = squirtleTexture;
+                                    break;
+                                case 1:
+                                    brokemonTexture[0] = charmanderTexture;
+                                    brokemonTexture[1] = charmanderTexture;
+                                    brokemonTexture[2] = charmanderTexture;
+                                    break;
+                                case 2:
+                                    brokemonTexture[0] = bulbasaurTexture;
+                                    brokemonTexture[1] = venubronkiTexture;
+                                    brokemonTexture[2] = venubrateuzadroidTexture;
+                                    break;
+                                default:
+                                    Console.WriteLine("Invalid selection. Please select 0, 1, or 2.");
+                                    brokemonTexture[0] = myssignuvskitrabovTexture;
+                                    brokemonTexture[1] = myssignuvskitrabovTexture;
+                                    brokemonTexture[2] = myssignuvskitrabovTexture;
+                                    break;
+                            }
+                            if (r.Next(15) == 10)
+                            {
+                                brokemonTexture[0] = myssignuvskitrabovTexture;
+                                brokemonTexture[1] = myssignuvskitrabovTexture;
+                                brokemonTexture[2] = myssignuvskitrabovTexture;
+                            }
+                            brokemons.Add(new Brokemon(new Vector2((float)xDir * 1f / 1000.0f, (float)yDir * 1f / 1000.0f), new Vector2(xPos, yPos), brokemonTexture, spriteBatch, 0));
                         }
                         else if (messageDinges == 2)
                         {
-                            foreach (Squirtle squirtle in squirtles)
+                            foreach (Brokemon brokemon in brokemons)
                             {
-                                squirtle.Direction += new Vector2(1, 0);
-                                squirtle.Direction.Normalize();
-                            }
-                            foreach (Charmander charmander in charmanders)
-                            {
-                                charmander.Direction += new Vector2(2, 0);
-                                charmander.Direction.Normalize();
+                                brokemon.Direction += new Vector2(0.5f, 0);
+                                brokemon.Direction.Normalize();
                             }
                         }
                         break;
@@ -159,89 +223,28 @@ namespace TurtleTurner2000
                 }
             }
 
-            //SquirTOLS
-            List<Squirtle> removeSquirtles = new List<Squirtle>();
-            foreach (Squirtle squirtle in squirtles)
+            //Brokemons vanilla set
+            List<Brokemon> removeBrokemons = new List<Brokemon>();
+            foreach (Brokemon brokemon in brokemons)
             {
-                squirtle.Update(gameTime);
-                if (squirtle.Position.X < totSize.X - squirtleTexture.Width / 2 ||
-                    squirtle.Position.X > totSize.X + totSize.Width + squirtleTexture.Width / 2 ||
-                    squirtle.Position.Y < totSize.Y - squirtleTexture.Height / 2 ||
-                    squirtle.Position.Y > totSize.Y + totSize.Height + squirtleTexture.Height / 2)
+                int el = brokemon.EvolutionStage;
+                brokemon.Update(gameTime);
+                if (brokemon.Position.X < totSize.X - brokemon.Textures[el].Width / 2 ||
+                    brokemon.Position.X > totSize.X + totSize.Width + brokemon.Textures[el].Width / 2 ||
+                    brokemon.Position.Y < totSize.Y - brokemon.Textures[el].Height / 2 ||
+                    brokemon.Position.Y > totSize.Y + totSize.Height + brokemon.Textures[el].Height / 2)
                 {
-                    removeSquirtles.Add(squirtle);
+                    removeBrokemons.Add(brokemon);
                 }
             }
-            foreach (Squirtle squirtle in removeSquirtles)
+            foreach (Brokemon brokemon in removeBrokemons)
             {
-                squirtles.Remove(squirtle);
+                brokemons.Remove(brokemon);
             }
-            removeSquirtles.Clear();
-
-            //Ch0rMovies aka charmenter
-            List<Charmander> removeCharmanders = new List<Charmander>();
-            foreach (Charmander charmander in charmanders)
-            {
-                charmander.Update(gameTime);
-                if (charmander.Position.X < totSize.X - charmanderTexture.Width / 2 ||
-                    charmander.Position.X > totSize.X + totSize.Width + charmanderTexture.Width / 2 ||
-                    charmander.Position.Y < totSize.Y - charmanderTexture.Height / 2 ||
-                    charmander.Position.Y > totSize.Y + totSize.Height + charmanderTexture.Height / 2)
-                {
-                    removeCharmanders.Add(charmander);
-                }
-            }
-            foreach (Charmander charmander in removeCharmanders)
-            {
-                charmanders.Remove(charmander);
-            }
-            removeCharmanders.Clear();
+            removeBrokemons.Clear();
 
             base.Update(gameTime);
         }
-
-        //public void SetRandomVectors()
-        //{
-        //    int edge = random.Next(0, 4);
-        //    int randomX = 0;
-        //    int randomY = 0;
-        //    switch (edge)
-        //    {
-        //        //top
-        //        case 0:
-        //            randomX = random.Next(0, graphics.PreferredBackBufferWidth);
-        //            randomY -= squirtleTexture.Height / 2;
-        //            direction = new Vector2(GetDirectionFloat(), 1);
-        //            break;
-        //        //right
-        //        case 1:
-        //            randomX = graphics.PreferredBackBufferWidth;
-        //            randomY = random.Next(0, graphics.PreferredBackBufferHeight);
-        //            randomX += squirtleTexture.Width / 2;
-        //            direction = new Vector2(-1, GetDirectionFloat());
-        //            break;
-        //        //bot
-        //        case 2:
-        //            randomX = random.Next(0, graphics.PreferredBackBufferWidth);
-        //            randomY = graphics.PreferredBackBufferHeight;
-        //            randomY += squirtleTexture.Height / 2;
-        //            direction = new Vector2(GetDirectionFloat(), -1);
-        //            break;
-        //        //left
-        //        case 3:
-        //            randomY = random.Next(0, graphics.PreferredBackBufferHeight);
-        //            randomX -= squirtleTexture.Width / 2;
-        //            direction = new Vector2(1, GetDirectionFloat());
-        //            break;
-        //    }
-
-        //    position = new Vector2(randomX, randomY);
-        //}
-
-        //public float GetDirectionFloat()
-        //{
-        //    return (float)random.Next(-1000, 1001) / 1000;
-        //}
 
         /// <summary>
         /// This is called when the game should draw itself.
@@ -252,36 +255,10 @@ namespace TurtleTurner2000
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             spriteBatch.Begin();
-            foreach (Squirtle squirtle in squirtles)
+            foreach (Brokemon brokemon in brokemons)
             {
-                //if (squirtle.Position.X > curSize.X &&
-                //    squirtle.Position.X < curSize.X + curSize.Width &&
-                //    squirtle.Position.Y > curSize.Y &&
-                //    squirtle.Position.Y < curSize.Y + curSize.Height)
-                //{
-                Vector2 newPos = new Vector2(squirtle.Position.X - curSize.X, squirtle.Position.Y - curSize.Y);
-                spriteBatch.Draw(squirtleTexture, newPos,
-                                        squirtleTexture.Bounds, Color.White,
-                                        squirtle.Rotation, new Vector2(squirtleTexture.Width / 2, squirtleTexture.Height / 2),
-                                        1.0f, SpriteEffects.None, 1.0f);
-                //}
+                brokemon.Draw(curSize);
             }
-
-            foreach (Charmander charmander in charmanders)
-            {
-                //if (squirtle.Position.X > curSize.X &&
-                //    squirtle.Position.X < curSize.X + curSize.Width &&
-                //    squirtle.Position.Y > curSize.Y &&
-                //    squirtle.Position.Y < curSize.Y + curSize.Height)
-                //{
-                Vector2 newPos = new Vector2(charmander.Position.X - curSize.X, charmander.Position.Y - curSize.Y);
-                spriteBatch.Draw(charmanderTexture, newPos,
-                                        charmanderTexture.Bounds, Color.White,
-                                        charmander.Rotation, new Vector2(charmanderTexture.Width / 2, charmanderTexture.Height / 2),
-                                        1.0f, SpriteEffects.None, 1.0f);
-                //}
-            }
-
             spriteBatch.End();
 
             base.Draw(gameTime);
