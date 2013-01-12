@@ -175,13 +175,14 @@ namespace TurtleTurner2000
                             int yPos = inc.ReadInt32();
                             int xDir = inc.ReadInt32();
                             int yDir = inc.ReadInt32();
+                            int brokeSpecies = inc.ReadInt32(); //0 = squirtle, 1 = charmander, 2 = bulbasaur, 10 = missingno
 
                             Texture2D[] brokemonTexture = new Texture2D[3];
-                            int rInt = 0;
-                            Random r = new Random();
-                            rInt = r.Next(3);
-                            
-                            switch (rInt)
+                            //int rInt = 0;
+                            //Random r = new Random();
+                            //rInt = r.Next(3);
+
+                            switch (brokeSpecies)
                             {
                                 case 0:
                                     brokemonTexture[0] = squirtleTexture;
@@ -205,13 +206,12 @@ namespace TurtleTurner2000
                                     brokemonTexture[2] = myssignuvskitrabovTexture;
                                     break;
                             }
-                            if (r.Next(15) == 10)
-                            {
-                                brokemonTexture[0] = myssignuvskitrabovTexture;
-                                brokemonTexture[1] = myssignuvskitrabovTexture;
-                                brokemonTexture[2] = myssignuvskitrabovTexture;
-                            }
-                            //brokemons.Add(new Brokemon(new Vector2((float)xDir * 1f / 1000.0f, (float)yDir * 1f / 1000.0f), new Vector2(xPos, yPos), brokemonTexture, spriteBatch, IDString));
+                            //if (r.Next(15) == 10)
+                            //{
+                            //    brokemonTexture[0] = myssignuvskitrabovTexture;
+                            //    brokemonTexture[1] = myssignuvskitrabovTexture;
+                            //    brokemonTexture[2] = myssignuvskitrabovTexture;
+                            //}
                             brokemons2.Add(IDString, new Brokemon(new Vector2((float)xDir * 1f / 1000.0f, (float)yDir * 1f / 1000.0f), new Vector2(xPos, yPos), brokemonTexture, spriteBatch, IDString));
                         }
                         else if (messageDinges == 2) //Delete the brokestamuv
@@ -219,12 +219,6 @@ namespace TurtleTurner2000
                             IDString = inc.ReadString(); //ID van het brokemonnetje
 
                             brokemons2.Remove(IDString);
-
-                            //foreach (Brokemon brokemon in brokemons2.Values)
-                            //{
-                            //    brokemon.Direction += new Vector2(0.5f, 0);
-                            //    brokemon.Direction.Normalize();
-                            //}
                         }
                         else if (messageDinges == 3)
                         {
