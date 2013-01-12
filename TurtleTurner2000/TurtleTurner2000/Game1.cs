@@ -32,7 +32,8 @@ namespace TurtleTurner2000
 
         Texture2D myssignuvskitrabovTexture;
 
-        List<Brokemon> brokemons;
+        //List<Brokemon> brokemons;
+        Dictionary<string, Brokemon> brokemons2;
 
         Rectangle totSize;
         Rectangle curSize;
@@ -58,8 +59,8 @@ namespace TurtleTurner2000
                     ip = reader.ReadLine();
                 }
             }
-            deveClient = new DeveClient("localhost", 1337);
-            //deveClient = new DeveClient(ip, 1337);
+            //deveClient = new DeveClient("localhost", 1337);
+            deveClient = new DeveClient(ip, 1337);
             deveClient.Start();
 
             DeveOutgoingMessage outje = new DeveOutgoingMessage();
@@ -85,7 +86,8 @@ namespace TurtleTurner2000
         /// </summary>
         protected override void Initialize()
         {
-            brokemons = new List<Brokemon>();
+            //brokemons = new List<Brokemon>();
+            brokemons2 = new Dictionary<string, Brokemon>();
             base.Initialize();
         }
 
@@ -147,7 +149,9 @@ namespace TurtleTurner2000
                         break;
                     case DeveMessageType.Data:
                         int messageDinges = inc.ReadInt32(); //Type van de Data message. 0 = your screen position, 1 = monsterspawn, 2 = monster direction gieben
-                        //string IDString = inc.ReadString(); //ID van het brokemonnetje
+
+                        string IDString = ""; //ID of the brokemonzo, only used in case 1, 2 and 3, not 0. NOT 0 ;)
+
                         if (messageDinges == 0)
                         {
                             totSize = new Rectangle();
@@ -163,8 +167,10 @@ namespace TurtleTurner2000
                             curSize.Width = inc.ReadInt32();
                             curSize.Height = inc.ReadInt32();
                         }
-                        else if (messageDinges == 1)
+                        else if (messageDinges == 1) //Spawn a brokejoid
                         {
+                            IDString = inc.ReadString(); //ID van het brokemonnetje
+
                             int xPos = inc.ReadInt32();
                             int yPos = inc.ReadInt32();
                             int xDir = inc.ReadInt32();
@@ -179,13 +185,13 @@ namespace TurtleTurner2000
                             {
                                 case 0:
                                     brokemonTexture[0] = squirtleTexture;
-                                    brokemonTexture[1] = squirtleTexture;
-                                    brokemonTexture[2] = squirtleTexture;
+                                    brokemonTexture[1] = squirtleTexture;//replace plx
+                                    brokemonTexture[2] = squirtleTexture;//replace plx
                                     break;
                                 case 1:
                                     brokemonTexture[0] = charmanderTexture;
-                                    brokemonTexture[1] = charmanderTexture;
-                                    brokemonTexture[2] = charmanderTexture;
+                                    brokemonTexture[1] = charmanderTexture;//replace plx
+                                    brokemonTexture[2] = charmanderTexture;//replace plx
                                     break;
                                 case 2:
                                     brokemonTexture[0] = bulbasaurTexture;
@@ -205,15 +211,29 @@ namespace TurtleTurner2000
                                 brokemonTexture[1] = myssignuvskitrabovTexture;
                                 brokemonTexture[2] = myssignuvskitrabovTexture;
                             }
-                            brokemons.Add(new Brokemon(new Vector2((float)xDir * 1f / 1000.0f, (float)yDir * 1f / 1000.0f), new Vector2(xPos, yPos), brokemonTexture, spriteBatch, 0));
+                            //brokemons.Add(new Brokemon(new Vector2((float)xDir * 1f / 1000.0f, (float)yDir * 1f / 1000.0f), new Vector2(xPos, yPos), brokemonTexture, spriteBatch, IDString));
+                            brokemons2.Add(IDString, new Brokemon(new Vector2((float)xDir * 1f / 1000.0f, (float)yDir * 1f / 1000.0f), new Vector2(xPos, yPos), brokemonTexture, spriteBatch, IDString));
                         }
-                        else if (messageDinges == 2)
+                        else if (messageDinges == 2) //Delete the brokestamuv
                         {
-                            foreach (Brokemon brokemon in brokemons)
-                            {
-                                brokemon.Direction += new Vector2(0.5f, 0);
-                                brokemon.Direction.Normalize();
-                            }
+                            IDString = inc.ReadString(); //ID van het brokemonnetje
+
+                            brokemons2.Remove(IDString);
+
+                            //foreach (Brokemon brokemon in brokemons2.Values)
+                            //{
+                            //    brokemon.Direction += new Vector2(0.5f, 0);
+                            //    brokemon.Direction.Normalize();
+                            //}
+                        }
+                        else if (messageDinges == 3)
+                        {
+                            IDString = inc.ReadString(); //ID van het brokemonnetje
+                            //SetLocation Broketje
+                            int xPos = inc.ReadInt32();
+                            int yPos = inc.ReadInt32();
+                            Brokemon brokemon = brokemons2[IDString];
+                            brokemon.Position = new Vector2(xPos, yPos);
                         }
                         break;
                     case DeveMessageType.StatusChanged:
@@ -223,26 +243,29 @@ namespace TurtleTurner2000
                 }
             }
 
-            //Brokemons vanilla set
+            //Brokemons vanilla set update calls
             List<Brokemon> removeBrokemons = new List<Brokemon>();
-            foreach (Brokemon brokemon in brokemons)
+            foreach (Brokemon brokemon in brokemons2.Values)
             {
                 int el = brokemon.EvolutionStage;
                 brokemon.Update(gameTime);
-                if (brokemon.Position.X < totSize.X - brokemon.Textures[el].Width / 2 ||
-                    brokemon.Position.X > totSize.X + totSize.Width + brokemon.Textures[el].Width / 2 ||
-                    brokemon.Position.Y < totSize.Y - brokemon.Textures[el].Height / 2 ||
-                    brokemon.Position.Y > totSize.Y + totSize.Height + brokemon.Textures[el].Height / 2)
-                {
-                    removeBrokemons.Add(brokemon);
-                }
-            }
-            foreach (Brokemon brokemon in removeBrokemons)
-            {
-                brokemons.Remove(brokemon);
-            }
-            removeBrokemons.Clear();
 
+                //Check if brokemon goes out of screen.
+                //    if (brokemon.Position.X < totSize.X - brokemon.Textures[el].Width / 2 ||
+                //        brokemon.Position.X > totSize.X + totSize.Width + brokemon.Textures[el].Width / 2 ||
+                //        brokemon.Position.Y < totSize.Y - brokemon.Textures[el].Height / 2 ||
+                //        brokemon.Position.Y > totSize.Y + totSize.Height + brokemon.Textures[el].Height / 2)
+                //    {
+                //        removeBrokemons.Add(brokemon);
+                //    }
+                //}
+                //foreach (Brokemon brokemon in removeBrokemons)
+                //{
+
+                //    brokemons.Remove(brokemon);
+                //}
+                //removeBrokemons.Clear();
+            }
             base.Update(gameTime);
         }
 
@@ -255,7 +278,7 @@ namespace TurtleTurner2000
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             spriteBatch.Begin();
-            foreach (Brokemon brokemon in brokemons)
+            foreach (Brokemon brokemon in brokemons2.Values)
             {
                 brokemon.Draw(curSize);
             }

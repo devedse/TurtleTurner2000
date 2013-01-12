@@ -9,8 +9,8 @@ namespace TurtleTurner2000
 {
     class Brokemon
     {
-        private int id;
-        public int ID
+        private string id;
+        public string ID
         {
             get { return id; }
             set { id = value; }
@@ -54,7 +54,7 @@ namespace TurtleTurner2000
             set { evolutionLevel = value; }
         }
 
-        public Brokemon(Vector2 direction, Vector2 position, Texture2D[] textures, SpriteBatch sb, int id)
+        public Brokemon(Vector2 direction, Vector2 position, Texture2D[] textures, SpriteBatch sb, string id)
         {
             this.evolutionLevel = 0;
             this.direction = direction;
