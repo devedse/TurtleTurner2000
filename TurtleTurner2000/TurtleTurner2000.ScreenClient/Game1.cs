@@ -308,8 +308,12 @@ namespace TurtleTurner2000.ScreenClient
                         //SetLocation Broketje
                         int xPos = inc.ReadInt32();
                         int yPos = inc.ReadInt32();
+                        int xSpeed = inc.ReadInt32();
+                        int ySpeed = inc.ReadInt32();
                         Brokemon brokemon = brokemons2[idString];
                         brokemon.Position = new Vector2(xPos, yPos);
+                        brokemon.xSpeed = xSpeed;
+                        brokemon.ySpeed = ySpeed;
                     }
                     break;
                 default:

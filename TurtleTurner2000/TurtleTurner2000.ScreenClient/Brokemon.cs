@@ -27,12 +27,10 @@ namespace TurtleTurner2000.ScreenClient
             get { return position; }
             set { position = value; }
         }
-        float rotation = 0.0f;
-        public float Rotation
-        {
-            get { return rotation; }
-            set { rotation = value; }
-        }
+
+        public float xSpeed = 0f;
+        public float ySpeed = 0f;
+
         private Texture2D[] textures;
         public Texture2D[] Textures
         {
@@ -77,20 +75,23 @@ namespace TurtleTurner2000.ScreenClient
                 evolutionLevel = 2;
             }
 
-            position += direction * 10;
-            if (direction.X != 0)
-                rotation += 0.05f * direction.X / Math.Abs(direction.X);
-            if (rotation > 360.0f)
-                rotation = 0.0f;
+
+            position.X += xSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            position.Y += ySpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+
         }
 
         public void Draw(Rectangle curSize)
         {
-            Vector2 newPos = new Vector2(this.Position.X - curSize.X, this.Position.Y - curSize.Y);
-            sb.Draw(textures[evolutionLevel], newPos,
-                                    textures[evolutionLevel].Bounds, Color.White,
-                                    this.Rotation, new Vector2(textures[evolutionLevel].Width / 2, textures[evolutionLevel].Height / 2),
-                                    1.0f, SpriteEffects.None, 1.0f);
+            Vector2 newPos = new Vector2(this.Position.X - curSize.X - textures[evolutionLevel].Width / 2, this.Position.Y - curSize.Y - textures[evolutionLevel].Height / 2);
+
+            sb.Draw(textures[evolutionLevel], newPos, Color.White);
+
+            //sb.Draw(textures[evolutionLevel], newPos,
+            //                        textures[evolutionLevel].Bounds, Color.White,
+            //                        this.Rotation, new Vector2(textures[evolutionLevel].Width / 2, textures[evolutionLevel].Height / 2),
+            //                        1.0f, SpriteEffects.None, 1.0f);
         }
     }
 }

@@ -150,6 +150,11 @@ namespace TurtleTurner2000.Server
                 screenClientje.Update(gameTime);
             }
 
+            foreach (var controlClientje in controlClientjes.Values)
+            {
+                controlClientje.Update(gameTime);
+            }
+
 
             previousKeyboardState = Keyboard.GetState();
             previousMouseState = Mouse.GetState();
@@ -255,8 +260,8 @@ namespace TurtleTurner2000.Server
                             outje = new DeveOutgoingMessage();
                             outje.WriteInt32((int)ServerSendMessageType.SetPlayerLocation);
                             outje.WriteString(controlClientje.guid);
-                            outje.WriteInt32(controlClientje.posx);
-                            outje.WriteInt32(controlClientje.posy);
+                            outje.WriteInt32((int)controlClientje.posx);
+                            outje.WriteInt32((int)controlClientje.posy);
                         }
                     }
                     break;
@@ -264,7 +269,7 @@ namespace TurtleTurner2000.Server
                     {
                         DebugMSG("Het is een Android :)");
 
-                        ControlClientje controlClientje = new ControlClientje(inc.Sender);
+                        ControlClientje controlClientje = new ControlClientje(inc.Sender, this);
                         controlClientjes.Add(inc.Sender, controlClientje);
                         allClientjes.Add(inc.Sender, controlClientje);
 
@@ -280,35 +285,38 @@ namespace TurtleTurner2000.Server
                         ControlClientje curControlClient = controlClientjes[inc.Sender];
 
                         String direction = inc.ReadString();
+                        String onOrOffString = inc.ReadString();
+                        Boolean onOrOff = onOrOffString == "True";
 
-                        DebugMSG("Got message with: " + direction + " from: " + inc.Sender);
+
+                        DebugMSG("Got message with: " + direction + ": " + onOrOff);
 
                         if (direction == "left")
                         {
-                            curControlClient.posx -= 50;
+                            curControlClient.LeftArrow = onOrOff;
                         }
                         else if (direction == "right")
                         {
-                            curControlClient.posx += 50;
+                            curControlClient.RightArrow = onOrOff;
                         }
                         else if (direction == "up")
                         {
-                            curControlClient.posy -= 50;
+                            curControlClient.UpArrown = onOrOff;
                         }
                         else if (direction == "down")
                         {
-                            curControlClient.posy += 50;
+                            curControlClient.DownArrow = onOrOff;
                         }
 
-                        DebugMSG("X: " + curControlClient.posx + " Y: " + curControlClient.posy);
+                        //DebugMSG("X: " + curControlClient.posx + " Y: " + curControlClient.posy);
 
-                        DeveOutgoingMessage outje = new DeveOutgoingMessage();
-                        outje.WriteInt32((int)ServerSendMessageType.SetPlayerLocation);
-                        outje.WriteString(curControlClient.guid);
-                        outje.WriteInt32(curControlClient.posx);
-                        outje.WriteInt32(curControlClient.posy);
+                        //DeveOutgoingMessage outje = new DeveOutgoingMessage();
+                        //outje.WriteInt32((int)ServerSendMessageType.SetPlayerLocation);
+                        //outje.WriteString(curControlClient.guid);
+                        //outje.WriteInt32((int)curControlClient.posx);
+                        //outje.WriteInt32((int)curControlClient.posy);
 
-                        SendToScreens(outje);
+                        //SendToScreens(outje);
                         break;
                     }
                 default:
@@ -380,7 +388,7 @@ namespace TurtleTurner2000.Server
 
             foreach (ControlClientje controlClientje in controlClientjes.Values)
             {
-                spriteBatch.Draw(skwirtleTexture, new Rectangle(controlClientje.posx / scale - skwirtleTexture.Width / scale / 2, controlClientje.posy / scale - skwirtleTexture.Height / scale / 2, skwirtleTexture.Width / scale, skwirtleTexture.Height / scale), Color.White);
+                spriteBatch.Draw(skwirtleTexture, new Rectangle((int)(controlClientje.posx) / scale - skwirtleTexture.Width / scale / 2, (int)(controlClientje.posy) / scale - skwirtleTexture.Height / scale / 2, skwirtleTexture.Width / scale, skwirtleTexture.Height / scale), Color.White);
             }
 
 

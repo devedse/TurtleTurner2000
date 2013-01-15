@@ -59,6 +59,7 @@ namespace TurtleTurner2000AndroidController
             DeveOutgoingMessage outje = new DeveOutgoingMessage();
             outje.WriteInt32((int)ServerReceiveMessageType.NewButtonState); //Identifier for command message
             outje.WriteString(stringtosend);
+            outje.WriteString(pressed.ToString());
             deveClient.Send(outje);
         }
 
