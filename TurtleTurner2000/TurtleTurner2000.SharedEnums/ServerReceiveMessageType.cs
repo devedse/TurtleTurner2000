@@ -11,7 +11,7 @@ namespace TurtleTurner2000.SharedEnums
         //The rest are messages from a controller
 
         LoginMessageScreenClient = 0, //int screenWidth, int screenHeight
-        LoginMessageControlClient = 1, //Lalala
+        LoginMessageControlClient = 1, //Niets
 
 
 

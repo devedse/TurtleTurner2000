@@ -54,6 +54,33 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\DeveConnecteuze.Network\DeveClient.cs">
+      <Link>DeveConnecteuze.Network\DeveClient.cs</Link>
+    </Compile>
+    <Compile Include="..\DeveConnecteuze.Network\DeveConnection.cs">
+      <Link>DeveConnecteuze.Network\DeveConnection.cs</Link>
+    </Compile>
+    <Compile Include="..\DeveConnecteuze.Network\DeveIncomingMessage.cs">
+      <Link>DeveConnecteuze.Network\DeveIncomingMessage.cs</Link>
+    </Compile>
+    <Compile Include="..\DeveConnecteuze.Network\DeveMessageType.cs">
+      <Link>DeveConnecteuze.Network\DeveMessageType.cs</Link>
+    </Compile>
+    <Compile Include="..\DeveConnecteuze.Network\DeveOutgoingMessage.cs">
+      <Link>DeveConnecteuze.Network\DeveOutgoingMessage.cs</Link>
+    </Compile>
+    <Compile Include="..\DeveConnecteuze.Network\DevePeer.cs">
+      <Link>DeveConnecteuze.Network\DevePeer.cs</Link>
+    </Compile>
+    <Compile Include="..\DeveConnecteuze.Network\DeveQueue.cs">
+      <Link>DeveConnecteuze.Network\DeveQueue.cs</Link>
+    </Compile>
+    <Compile Include="..\DeveConnecteuze.Network\DeveServer.cs">
+      <Link>DeveConnecteuze.Network\DeveServer.cs</Link>
+    </Compile>
+    <Compile Include="..\DeveConnecteuze.Network\DeveServerClient.cs">
+      <Link>DeveConnecteuze.Network\DeveServerClient.cs</Link>
+    </Compile>
     <Compile Include="..\TurtleTurner2000.SharedEnums\ServerReceiveMessageType.cs">
       <Link>ServerReceiveMessageType.cs</Link>
     </Compile>
@@ -62,15 +89,6 @@
     </Compile>
     <Compile Include="Activity1.cs" />
     <Compile Include="Buttontje.cs" />
-    <Compile Include="DeveConnecteuze.Network\DeveClient.cs" />
-    <Compile Include="DeveConnecteuze.Network\DeveConnection.cs" />
-    <Compile Include="DeveConnecteuze.Network\DeveIncomingMessage.cs" />
-    <Compile Include="DeveConnecteuze.Network\DeveMessageType.cs" />
-    <Compile Include="DeveConnecteuze.Network\DeveOutgoingMessage.cs" />
-    <Compile Include="DeveConnecteuze.Network\DevePeer.cs" />
-    <Compile Include="DeveConnecteuze.Network\DeveQueue.cs" />
-    <Compile Include="DeveConnecteuze.Network\DeveServer.cs" />
-    <Compile Include="DeveConnecteuze.Network\DeveServerClient.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
