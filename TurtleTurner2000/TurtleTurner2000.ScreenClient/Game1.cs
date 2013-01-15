@@ -58,7 +58,7 @@ namespace TurtleTurner2000.ScreenClient
             //graphics.IsFullScreen = true;
             Content.RootDirectory = "Content";
 
-            String ip = "localhost";
+            String ip = "192.168.2.15";
 
 
 
