@@ -12,6 +12,7 @@ using System.Net;
 using System.IO;
 using System.Threading;
 using TurtleTurner2000.SharedEnums;
+using System.Diagnostics;
 #endregion
 
 namespace TurtleTurner2000.ScreenClient
@@ -36,6 +37,8 @@ namespace TurtleTurner2000.ScreenClient
 
         Texture2D myssignuvskitrabovTexture;
 
+        SpriteFont font;
+
         //List<Brokemon> brokemons;
         Dictionary<string, Brokemon> brokemons2;
 
@@ -49,9 +52,13 @@ namespace TurtleTurner2000.ScreenClient
         private int mapHeight = 0;
         int tileSize = 64;
 
+        Stopwatch fpsMeterStopwatch = new Stopwatch();
+
         public Game1()
             : base()
         {
+            fpsMeterStopwatch.Start();
+
             graphics = new GraphicsDeviceManager(this);
             graphics.PreferredBackBufferHeight = 1080;
             graphics.PreferredBackBufferWidth = 1920;
@@ -122,6 +129,8 @@ namespace TurtleTurner2000.ScreenClient
             venubrateuzadroidTexture = this.Content.Load<Texture2D>("venubrateuzadroid");
 
             myssignuvskitrabovTexture = this.Content.Load<Texture2D>("myssignuvskitrabov");
+
+            font = Content.Load<SpriteFont>("SpriteFont1");
 
             tileTexture = Content.Load<Texture2D>("tile");
         }
@@ -338,6 +347,11 @@ namespace TurtleTurner2000.ScreenClient
                     }
                 }
             }
+
+
+            spriteBatch.DrawString(font, Math.Round(1.0 / fpsMeterStopwatch.Elapsed.TotalSeconds, 2).ToString(), new Vector2(10, 10), Color.White);
+            fpsMeterStopwatch.Restart();
+
 
             spriteBatch.End();
 

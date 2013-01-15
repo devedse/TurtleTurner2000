@@ -86,7 +86,6 @@
     </Content>
     <Content Include="Icon.ico" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\DeveConnecteuze.Network\DeveConnecteuze.Network.csproj">
       <Project>{a45fd3dc-b873-494a-b2fe-f7ab49bd8c0f}</Project>
@@ -96,6 +95,11 @@
       <Project>{aa42c137-6139-4cd8-b90b-cb66bdd4e11f}</Project>
       <Name>TurtleTurner2000.SharedEnums</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Content\SpriteFont1.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

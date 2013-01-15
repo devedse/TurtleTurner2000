@@ -11,6 +11,7 @@ using System.IO;
 using DeveConnecteuze.Network;
 using TurtleTurner2000.SharedEnums;
 using System.Text;
+using System.Diagnostics;
 #endregion
 
 namespace TurtleTurner2000.Server
@@ -26,6 +27,8 @@ namespace TurtleTurner2000.Server
         public Texture2D pixelTexture;
         public Texture2D tileTexture;
         public Texture2D skwirtleTexture;
+
+        SpriteFont font;
 
         //public List<ScreenClientje> screenClientjes = new List<ScreenClientje>();
 
@@ -49,9 +52,13 @@ namespace TurtleTurner2000.Server
 
         public int tileSize = 64;
 
+        Stopwatch fpsMeterStopwatch = new Stopwatch();
+
         public Game1()
             : base()
         {
+            fpsMeterStopwatch.Start();
+
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
 
@@ -109,6 +116,7 @@ namespace TurtleTurner2000.Server
             tileTexture = Content.Load<Texture2D>("tile");
             skwirtleTexture = Content.Load<Texture2D>("skwirtle");
 
+            font = Content.Load<SpriteFont>("SpriteFont1");
             //rectSprite = new RectangleSprite(new Rectangle(100, 100, 200, 100), 10, pixelTexture);
         }
 
@@ -372,8 +380,14 @@ namespace TurtleTurner2000.Server
 
             foreach (ControlClientje controlClientje in controlClientjes.Values)
             {
-                spriteBatch.Draw(skwirtleTexture, new Rectangle(controlClientje.posx / scale, controlClientje.posy / scale, skwirtleTexture.Width / scale, skwirtleTexture.Height / scale), Color.White);
+                spriteBatch.Draw(skwirtleTexture, new Rectangle(controlClientje.posx / scale - skwirtleTexture.Width / scale / 2, controlClientje.posy / scale - skwirtleTexture.Height / scale / 2, skwirtleTexture.Width / scale, skwirtleTexture.Height / scale), Color.White);
             }
+
+
+
+            spriteBatch.DrawString(font, Math.Round(1.0 / fpsMeterStopwatch.Elapsed.TotalSeconds, 2).ToString(), new Vector2(10, 10), Color.White);
+            fpsMeterStopwatch.Restart();
+
 
             spriteBatch.End();
 
