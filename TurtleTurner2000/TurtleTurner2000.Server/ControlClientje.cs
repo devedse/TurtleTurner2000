@@ -73,9 +73,6 @@ namespace TurtleTurner2000.Server
                 ySpeed += 300f;
             }
 
-            posx += xSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
-            posy += ySpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
-
             if (dirty)
             {
 
@@ -92,6 +89,9 @@ namespace TurtleTurner2000.Server
 
                 dirty = false;
             }
+
+            posx += xSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            posy += ySpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
         }
 
 

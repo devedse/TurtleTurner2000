@@ -262,6 +262,10 @@ namespace TurtleTurner2000.Server
                             outje.WriteString(controlClientje.guid);
                             outje.WriteInt32((int)controlClientje.posx);
                             outje.WriteInt32((int)controlClientje.posy);
+                            outje.WriteInt32(0);
+                            outje.WriteInt32(0);
+
+                            screenClientje.deveConnection.Send(outje);
                         }
                     }
                     break;
