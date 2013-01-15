@@ -25,6 +25,7 @@ namespace TurtleTurner2000.Server
 
         public Texture2D pixelTexture;
         public Texture2D tileTexture;
+        public Texture2D skwirtleTexture;
 
         //public List<ScreenClientje> screenClientjes = new List<ScreenClientje>();
 
@@ -106,7 +107,7 @@ namespace TurtleTurner2000.Server
             spriteBatch = new SpriteBatch(GraphicsDevice);
             pixelTexture = Content.Load<Texture2D>("pixel");
             tileTexture = Content.Load<Texture2D>("tile");
-
+            skwirtleTexture = Content.Load<Texture2D>("skwirtle");
 
             //rectSprite = new RectangleSprite(new Rectangle(100, 100, 200, 100), 10, pixelTexture);
         }
@@ -176,7 +177,7 @@ namespace TurtleTurner2000.Server
                                 {
                                     ControlClientje controlClientje = controlClientjes[inc.Sender];
                                     DeveOutgoingMessage outje = new DeveOutgoingMessage();
-                                    outje.WriteInt32(2);
+                                    outje.WriteInt32((int)ServerSendMessageType.RemovePlayer);
                                     outje.WriteString(controlClientje.guid);
                                     SendToScreens(outje);
 
@@ -234,6 +235,21 @@ namespace TurtleTurner2000.Server
                         }
 
                         screenClientje.deveConnection.Send(outje);
+
+                        foreach (var controlClientje in controlClientjes.Values)
+                        {
+                            outje = new DeveOutgoingMessage();
+                            outje.WriteInt32((int)ServerSendMessageType.SpawnNewPlayer); //Add beestje bij alle screens
+                            outje.WriteString(controlClientje.guid);
+
+                            screenClientje.deveConnection.Send(outje);
+
+                            outje = new DeveOutgoingMessage();
+                            outje.WriteInt32((int)ServerSendMessageType.SetPlayerLocation);
+                            outje.WriteString(controlClientje.guid);
+                            outje.WriteInt32(controlClientje.posx);
+                            outje.WriteInt32(controlClientje.posy);
+                        }
                     }
                     break;
                 case ServerReceiveMessageType.LoginMessageControlClient:
@@ -245,7 +261,7 @@ namespace TurtleTurner2000.Server
                         allClientjes.Add(inc.Sender, controlClientje);
 
                         DeveOutgoingMessage outje = new DeveOutgoingMessage();
-                        outje.WriteInt32(1); //Add beestje bij alle screens
+                        outje.WriteInt32((int)ServerSendMessageType.SpawnNewPlayer); //Add beestje bij alle screens
                         outje.WriteString(controlClientje.guid);
 
                         SendToScreens(outje);
@@ -279,7 +295,7 @@ namespace TurtleTurner2000.Server
                         DebugMSG("X: " + curControlClient.posx + " Y: " + curControlClient.posy);
 
                         DeveOutgoingMessage outje = new DeveOutgoingMessage();
-                        outje.WriteInt32(3);
+                        outje.WriteInt32((int)ServerSendMessageType.SetPlayerLocation);
                         outje.WriteString(curControlClient.guid);
                         outje.WriteInt32(curControlClient.posx);
                         outje.WriteInt32(curControlClient.posy);
@@ -352,6 +368,11 @@ namespace TurtleTurner2000.Server
                         spriteBatch.Draw(tileTexture, rect, Color.White);
                     }
                 }
+            }
+
+            foreach (ControlClientje controlClientje in controlClientjes.Values)
+            {
+                spriteBatch.Draw(skwirtleTexture, new Rectangle(controlClientje.posx / scale, controlClientje.posy / scale, skwirtleTexture.Width / scale, skwirtleTexture.Height / scale), Color.White);
             }
 
             spriteBatch.End();

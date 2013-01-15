@@ -5,6 +5,7 @@ using DeveConnecteuze.Network;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input.Touch;
+using TurtleTurner2000.SharedEnums;
 
 namespace TurtleTurner2000AndroidController
 {
@@ -56,7 +57,7 @@ namespace TurtleTurner2000AndroidController
         public void SendMeClicking()
         {
             DeveOutgoingMessage outje = new DeveOutgoingMessage();
-            outje.WriteInt32(1); //Identifier for command message
+            outje.WriteInt32((int)ServerReceiveMessageType.NewButtonState); //Identifier for command message
             outje.WriteString(stringtosend);
             deveClient.Send(outje);
         }
