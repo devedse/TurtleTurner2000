@@ -40,7 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework.Windows">
-      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\MonoGame\v3.0\Assemblies\MonoGame.Framework.Windows.dll</HintPath>
+      <HintPath>$(MSBuildExtensionsPath)\..\MonoGame\v3.0\Assemblies\MonoGame.Framework.Windows.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.XML" />
