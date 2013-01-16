@@ -32,16 +32,14 @@ namespace TurtleTurner2000.Server
 
         public void Update(GameTime gameTime)
         {
-            int scale = game.scale;
-
-            Rectangle mousePos = new Rectangle(game.currentMouseState.X * scale, game.currentMouseState.Y * scale, 1, 1);
+            Rectangle mousePos = new Rectangle(game.currentMouseState.X, game.currentMouseState.Y , 1, 1);
 
 
 
             if (dragging)
             {
-                this.rect.X += game.currentMouseState.X * scale - game.previousMouseState.X * scale;
-                this.rect.Y += game.currentMouseState.Y * scale - game.previousMouseState.Y * scale;
+                this.rect.X += game.currentMouseState.X - game.previousMouseState.X ;
+                this.rect.Y += game.currentMouseState.Y - game.previousMouseState.Y;
 
                 SendNewPos();
             }
@@ -58,7 +56,7 @@ namespace TurtleTurner2000.Server
 
             }
 
-            rectToDraw = new Rectangle(rect.X / scale, rect.Y / scale, rect.Width / scale, rect.Height / scale);
+            rectToDraw = new Rectangle(rect.X, rect.Y, rect.Width, rect.Height);
 
             rectSprite.rect = rectToDraw;
             rectSprite.Update(gameTime);

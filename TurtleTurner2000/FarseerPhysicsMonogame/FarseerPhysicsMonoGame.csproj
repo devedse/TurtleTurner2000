@@ -148,6 +148,8 @@
     <Compile Include="Factories\FixtureFactory.cs" />
     <Compile Include="Factories\JointFactory.cs" />
     <Compile Include="Factories\LinkFactory.cs" />
+    <Compile Include="Helpers\Camera2D.cs" />
+    <Compile Include="Helpers\ConvertUnits.cs" />
     <Compile Include="Samples XNA Win8\Game1.cs" />
     <Compile Include="Samples XNA Win8\Program.cs" />
     <Compile Include="Settings.cs" />

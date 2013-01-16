@@ -12,6 +12,7 @@ using DeveConnecteuze.Network;
 using TurtleTurner2000.SharedEnums;
 using System.Text;
 using System.Diagnostics;
+using FarseerPhysics.Helpers;
 #endregion
 
 namespace TurtleTurner2000.Server
@@ -37,8 +38,6 @@ namespace TurtleTurner2000.Server
         public KeyboardState currentKeyboardState = Keyboard.GetState();
         public KeyboardState previousKeyboardState = Keyboard.GetState();
 
-        public int scale = 10; //10x zo klein
-
         private List<List<String>> map;
 
         private DeveServer deveServer;
@@ -54,6 +53,8 @@ namespace TurtleTurner2000.Server
 
         Stopwatch fpsMeterStopwatch = new Stopwatch();
 
+        public Camera2D Camera;
+
         public Game1()
             : base()
         {
@@ -65,8 +66,8 @@ namespace TurtleTurner2000.Server
             deveServer = new DeveServer(1337);
             deveServer.Start();
 
-            this.graphics.PreferredBackBufferHeight = 1080;
-            this.graphics.PreferredBackBufferWidth = 1920;
+            this.graphics.PreferredBackBufferHeight = 768;
+            this.graphics.PreferredBackBufferWidth = 1024;
         }
 
         /// <summary>
@@ -81,6 +82,9 @@ namespace TurtleTurner2000.Server
 
             base.Initialize();
             LoadMap();
+            Camera = new Camera2D(GraphicsDevice);
+            Camera.MoveCamera(Camera.ConvertScreenToWorld(new Vector2(map[0].Count * tileSize/2, map.Count * tileSize/2)));
+            Camera.Zoom = 0.070f;
         }
 
         public void LoadMap()
@@ -144,6 +148,8 @@ namespace TurtleTurner2000.Server
 
             UpdateNetwork(gameTime);
 
+            HandleCamera(gameTime, currentKeyboardState, currentMouseState, previousMouseState);
+            Camera.Update(gameTime);
 
             foreach (var screenClientje in screenClientjes.Values)
             {
@@ -324,10 +330,66 @@ namespace TurtleTurner2000.Server
                         break;
                     }
                 default:
-                    DebugMSG("Uknown message type");
+                    DebugMSG("Unknown message type");
                     break;
             }
 
+        }
+
+        bool drag = false;
+
+        private void HandleCamera(GameTime gameTime, KeyboardState ks, MouseState ms, MouseState previousms)
+        {
+            Vector2 camMove = Vector2.Zero;
+
+            if (ks.IsKeyDown(Keys.Up))
+            {
+                camMove.Y -= 10f * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            }
+            if (ks.IsKeyDown(Keys.Down))
+            {
+                camMove.Y += 10f * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            }
+            if (ks.IsKeyDown(Keys.Left))
+            {
+                camMove.X -= 10f * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            }
+            if (ks.IsKeyDown(Keys.Right))
+            {
+                camMove.X += 10f * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            }
+            if (ks.IsKeyDown(Keys.PageUp))
+            {
+                Camera.Zoom += 50f * (float)gameTime.ElapsedGameTime.TotalSeconds * Camera.Zoom / 20f;
+            }
+            if (ks.IsKeyDown(Keys.PageDown))
+            {
+                Camera.Zoom -= 50f * (float)gameTime.ElapsedGameTime.TotalSeconds * Camera.Zoom / 20f;
+            }
+            
+            //mouse part
+            Camera.Zoom -= (previousms.ScrollWheelValue - ms.ScrollWheelValue) / 240.0f / 100.0f;
+            if (ms.RightButton == ButtonState.Pressed && previousms.RightButton == ButtonState.Released)
+            {
+                drag = true;
+            }
+            if (ms.RightButton == ButtonState.Released && previousms.RightButton == ButtonState.Pressed)
+            {
+                drag = false;
+            }
+            if (drag)
+            {
+                camMove -= Camera.ConvertScreenToWorld(new Vector2(ms.X, ms.Y)) - Camera.ConvertScreenToWorld(new Vector2(previousms.X, previousms.Y));
+            }
+
+            if (camMove != Vector2.Zero)
+            {
+                Camera.MoveCamera(camMove);
+            }
+            if (ks.IsKeyDown(Keys.Home))
+            {
+                Camera.ResetCamera();
+            }
         }
 
         public void SendToScreens(DeveOutgoingMessage outje)
@@ -367,8 +429,7 @@ namespace TurtleTurner2000.Server
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            spriteBatch.Begin();
-
+            spriteBatch.Begin(0, null, null, null, null, null, Camera.View);
 
             foreach (var screenClientje in screenClientjes.Values)
             {
@@ -384,7 +445,7 @@ namespace TurtleTurner2000.Server
                     String cur = xlist[x];
                     if (cur == "1")
                     {
-                        Rectangle rect = new Rectangle(x * tileSize / scale, y * tileSize / scale, tileSize / scale, tileSize / scale);
+                        Rectangle rect = new Rectangle(x * tileSize, y * tileSize, tileSize, tileSize);
                         spriteBatch.Draw(tileTexture, rect, Color.White);
                     }
                 }
@@ -392,7 +453,7 @@ namespace TurtleTurner2000.Server
 
             foreach (ControlClientje controlClientje in controlClientjes.Values)
             {
-                spriteBatch.Draw(skwirtleTexture, new Rectangle((int)(controlClientje.posx) / scale - skwirtleTexture.Width / scale / 2, (int)(controlClientje.posy) / scale - skwirtleTexture.Height / scale / 2, skwirtleTexture.Width / scale, skwirtleTexture.Height / scale), Color.White);
+                spriteBatch.Draw(skwirtleTexture, new Rectangle((int)(controlClientje.posx) - skwirtleTexture.Width / 2, (int)(controlClientje.posy) - skwirtleTexture.Height / 2, skwirtleTexture.Width , skwirtleTexture.Height), Color.White);
             }
 
 

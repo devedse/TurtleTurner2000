@@ -79,6 +79,10 @@
       <Project>{a45fd3dc-b873-494a-b2fe-f7ab49bd8c0f}</Project>
       <Name>DeveConnecteuze.Network</Name>
     </ProjectReference>
+    <ProjectReference Include="..\FarseerPhysicsMonogame\FarseerPhysicsMonoGame.csproj">
+      <Project>{17e4b83d-4424-48b5-9926-920e82e7c082}</Project>
+      <Name>FarseerPhysicsMonoGame</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TurtleTurner2000.SharedEnums\TurtleTurner2000.SharedEnums.csproj">
       <Project>{aa42c137-6139-4cd8-b90b-cb66bdd4e11f}</Project>
       <Name>TurtleTurner2000.SharedEnums</Name>
