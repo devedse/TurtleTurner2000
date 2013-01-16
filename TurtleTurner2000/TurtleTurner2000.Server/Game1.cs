@@ -83,7 +83,7 @@ namespace TurtleTurner2000.Server
             base.Initialize();
             LoadMap();
             Camera = new Camera2D(GraphicsDevice);
-            Camera.MoveCamera(Camera.ConvertScreenToWorld(new Vector2(map[0].Count * tileSize/2, map.Count * tileSize/2)));
+            Camera.MoveCamera(Camera.ConvertScreenToWorld(new Vector2(map[0].Count * tileSize / 2, map.Count * tileSize / 2)));
             Camera.Zoom = 0.070f;
         }
 
@@ -366,7 +366,7 @@ namespace TurtleTurner2000.Server
             {
                 Camera.Zoom -= 50f * (float)gameTime.ElapsedGameTime.TotalSeconds * Camera.Zoom / 20f;
             }
-            
+
             //mouse part
             Camera.Zoom -= (previousms.ScrollWheelValue - ms.ScrollWheelValue) / 240.0f / 100.0f;
             if (ms.RightButton == ButtonState.Pressed && previousms.RightButton == ButtonState.Released)
@@ -453,7 +453,7 @@ namespace TurtleTurner2000.Server
 
             foreach (ControlClientje controlClientje in controlClientjes.Values)
             {
-                spriteBatch.Draw(skwirtleTexture, new Rectangle((int)(controlClientje.posx) - skwirtleTexture.Width / 2, (int)(controlClientje.posy) - skwirtleTexture.Height / 2, skwirtleTexture.Width , skwirtleTexture.Height), Color.White);
+                spriteBatch.Draw(skwirtleTexture, new Rectangle((int)(controlClientje.posx) - skwirtleTexture.Width / 2, (int)(controlClientje.posy) - skwirtleTexture.Height / 2, skwirtleTexture.Width, skwirtleTexture.Height), Color.White);
             }
 
 
