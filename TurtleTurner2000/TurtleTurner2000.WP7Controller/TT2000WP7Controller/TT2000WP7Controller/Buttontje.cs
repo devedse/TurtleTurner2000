@@ -4,8 +4,9 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input.Touch;
+using TurtleTurner2000.SharedEnums;
 
-namespace TT2000WP7Controller
+namespace TurtleTurner2000.WP7Controller
 {
     class Buttontje
     {
@@ -56,7 +57,11 @@ namespace TT2000WP7Controller
 
         public void SendMeClicking()
         {
-            game.SendMessage(stringtosend);
+            DeveOutgoingMessage outje = new DeveOutgoingMessage();
+            outje.WriteInt32((int)ServerReceiveMessageType.NewButtonState); //Identifier for command message
+            outje.WriteString(stringtosend);
+            outje.WriteString(pressed.ToString());
+            game.SendMessage(outje);
         }
 
         public void Draw(SpriteBatch spriteBatch)

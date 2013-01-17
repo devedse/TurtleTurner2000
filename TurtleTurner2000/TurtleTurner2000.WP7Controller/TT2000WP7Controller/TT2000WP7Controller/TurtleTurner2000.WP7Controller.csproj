@@ -7,8 +7,8 @@
     <Platform Condition=" '$(Platform)' == '' ">Windows Phone</Platform>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TT2000WP7Controller</RootNamespace>
-    <AssemblyName>TT2000WP7Controller</AssemblyName>
+    <RootNamespace>TurtleTurner2000.WP7Controller</RootNamespace>
+    <AssemblyName>TurtleTurner2000.WP7Controller</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <XnaFrameworkVersion>v4.0</XnaFrameworkVersion>
@@ -88,9 +88,14 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\TT2000WP7ControllerContent\TT2000WP7ControllerContent.contentproj">
-      <Name>TT2000WP7ControllerContent</Name>
+    <ProjectReference Include="..\..\..\TurtleTurner2000.SharedEnums\TurtleTurner2000.SharedEnums.csproj">
+      <Project>{AA42C137-6139-4CD8-B90B-CB66BDD4E11F}</Project>
+      <Name>TurtleTurner2000.SharedEnums</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TT2000WP7ControllerContent\TurtleTurner2000.WP7Content.contentproj">
+      <Name>TurtleTurner2000.WP7Content %28Content%29</Name>
       <XnaReferenceType>Content</XnaReferenceType>
+      <Project>{35A84C86-F097-4D52-B1A4-C1C442981DD4}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

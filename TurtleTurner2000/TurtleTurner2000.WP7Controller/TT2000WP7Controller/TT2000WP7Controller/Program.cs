@@ -1,6 +1,6 @@
 using System;
 
-namespace TT2000WP7Controller
+namespace TurtleTurner2000.WP7Controller
 {
 #if WINDOWS || XBOX
     static class Program

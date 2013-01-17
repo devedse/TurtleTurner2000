@@ -13,8 +13,9 @@ using System.Net.Sockets;
 using System.Net;
 using System.Threading;
 using System.IO;
+using TurtleTurner2000.SharedEnums;
 
-namespace TT2000WP7Controller
+namespace TurtleTurner2000.WP7Controller
 {
     /// <summary>
     /// This is the main type for your game
@@ -61,8 +62,7 @@ namespace TT2000WP7Controller
             args.RemoteEndPoint = endpoint;
             args.Completed += new EventHandler<SocketAsyncEventArgs>(args_Completed);
             DeveOutgoingMessage dom = new DeveOutgoingMessage(DeveMessageType.Data);
-            dom.WriteInt32(0);
-            dom.WriteInt32(1);
+            dom.WriteInt32((int)ServerReceiveMessageType.LoginMessageControlClient);
             byte[] buffer = dom.GetBytes();
             args.SetBuffer(buffer, 0, buffer.Length);
 
@@ -84,7 +84,7 @@ namespace TT2000WP7Controller
             //Debug.WriteLine("sending" + e.SocketError.ToString());
         }
 
-        public void SendMessage(string direction)
+        public void SendMessage(DeveOutgoingMessage dom)
         {
             if (socket.Connected)
             {
@@ -92,9 +92,9 @@ namespace TT2000WP7Controller
                 var args = new SocketAsyncEventArgs();
                 args.RemoteEndPoint = endpoint;
                 args.Completed += new EventHandler<SocketAsyncEventArgs>(argsSend_Completed);
-                DeveOutgoingMessage dom = new DeveOutgoingMessage(DeveMessageType.Data);
-                dom.WriteInt32(1);
-                dom.WriteString(direction);
+                //DeveOutgoingMessage dom = new DeveOutgoingMessage(DeveMessageType.Data);
+                //dom.WriteInt32(1);
+                //dom.WriteString(direction);
                 byte[] buffer = dom.GetBytes();
                 args.SetBuffer(buffer, 0, buffer.Length);
 

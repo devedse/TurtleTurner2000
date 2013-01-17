@@ -15,9 +15,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FarseerPhysicsMonoGame", "F
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestTietje", "TestTietje\TestTietje.csproj", "{A780A4B2-0AE0-4CBC-89DB-6A82BAB5F0C8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TT2000WP7Controller", "TurtleTurner2000.WP7Controller\TT2000WP7Controller\TT2000WP7Controller\TT2000WP7Controller.csproj", "{227E943F-37D5-4352-A602-870F92D96B9E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TurtleTurner2000.WP7Controller", "TurtleTurner2000.WP7Controller\TT2000WP7Controller\TT2000WP7Controller\TurtleTurner2000.WP7Controller.csproj", "{227E943F-37D5-4352-A602-870F92D96B9E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TT2000WP7ControllerContent", "TurtleTurner2000.WP7Controller\TT2000WP7Controller\TT2000WP7ControllerContent\TT2000WP7ControllerContent.contentproj", "{35A84C86-F097-4D52-B1A4-C1C442981DD4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TurtleTurner2000.WP7Content", "TurtleTurner2000.WP7Controller\TT2000WP7Controller\TT2000WP7ControllerContent\TurtleTurner2000.WP7Content.contentproj", "{35A84C86-F097-4D52-B1A4-C1C442981DD4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

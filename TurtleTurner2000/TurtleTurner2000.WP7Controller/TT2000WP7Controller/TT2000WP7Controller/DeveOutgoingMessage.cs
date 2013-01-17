@@ -10,7 +10,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 
 
-namespace TT2000WP7Controller
+namespace TurtleTurner2000.WP7Controller
 {
     public class DeveOutgoingMessage
     {
