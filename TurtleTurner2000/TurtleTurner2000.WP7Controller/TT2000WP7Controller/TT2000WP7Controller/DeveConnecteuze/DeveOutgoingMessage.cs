@@ -67,9 +67,15 @@ namespace TurtleTurner2000.WP7Controller
             WriteBytes(b);
         }
 
+        public void WriteUInt32(UInt32 value)
+        {
+            byte[] b = BitConverter.GetBytes(value);
+            WriteBytes(b);
+        }
+
         public void WriteFloat(float value)
         {
-            byte[] b = BitConverterFloat.GetBytes(value);
+            byte[] b = BitConverter.GetBytes(value);
             WriteBytes(b);
         }
 

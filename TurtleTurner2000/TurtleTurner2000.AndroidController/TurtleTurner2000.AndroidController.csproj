@@ -54,9 +54,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\DeveConnecteuze.Network\BitConverterFloat.cs">
-      <Link>DeveConnecteuze.Network\BitConverterFloat.cs</Link>
-    </Compile>
     <Compile Include="..\DeveConnecteuze.Network\DeveClient.cs">
       <Link>DeveConnecteuze.Network\DeveClient.cs</Link>
     </Compile>
