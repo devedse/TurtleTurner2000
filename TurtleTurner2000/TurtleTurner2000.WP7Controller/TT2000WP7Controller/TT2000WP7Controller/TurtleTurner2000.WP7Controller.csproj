@@ -65,6 +65,7 @@
     <Reference Include="System.Net" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BitConverterFloat.cs" />
     <Compile Include="Buttontje.cs" />
     <Compile Include="DeveMessageType.cs" />
     <Compile Include="DeveOutgoingMessage.cs" />
